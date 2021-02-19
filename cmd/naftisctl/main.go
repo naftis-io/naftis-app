@@ -55,6 +55,8 @@ func main() {
 	subcommands.Register(newScheduleWorkload(app), "principal")
 	subcommands.Register(newListScheduledWorkloads(app), "principal")
 
+	subcommands.Register(newListObservedWorkloads(app), "runner")
+
 	flag.Parse()
 
 	os.Exit(int(subcommands.Execute(ctx)))
