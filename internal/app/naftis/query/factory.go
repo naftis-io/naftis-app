@@ -15,3 +15,7 @@ func NewFactory(storage storage.Container) *Factory {
 func (f *Factory) ListScheduledWorkloads() *ListScheduledWorkloads {
 	return NewListScheduledWorkloads(f.storage.ScheduledWorkload())
 }
+
+func (f *Factory) ListObservedWorkloads() *ListObservedWorkloads {
+	return NewListObservedWorkloads(f.storage.ObservedWorkload())
+}
