@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option go_package = "gitlab.com/naftis/app/naftis/pkg/protocol/blockchain";
+
+package io.naftis.blockchain.v1;
+
+import "api/protoc/entity/workload_spec_message.proto";
+
+/* WorkloadSpecification message is published to blockchain by Principal side. This message contains expected
+ * Runner capabilities and runtime parameters. This message MUST be published before ContractRequest, because
+ * ContractRequest referencing this specification. */
+message WorkloadSpecification {
+  io.naftis.entity.WorkloadSpec spec = 1;
+  string principal_public_key = 2; // ECDSA
+}

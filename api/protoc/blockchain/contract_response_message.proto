@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+option go_package = "gitlab.com/naftis/app/naftis/pkg/protocol/blockchain";
+
+package io.naftis.blockchain.v1;
+
+/* ContractResponse message is published to blockchain by Runner's side. The message contains offered price and ip
+ * address of Runner's system. When this message is published to blockchain and read by Principal, Principal SHOULD
+ * made control connection to Runner over Control protocol. */
+message ContractResponse {
+  uint32 price_per_minute = 1; // Runner can offer lower price than Principal
+  uint32 ip_address = 2;
+}

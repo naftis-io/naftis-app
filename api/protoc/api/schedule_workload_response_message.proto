@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+option go_package = "gitlab.com/naftis/app/naftis/pkg/protocol/api";
+
+package io.naftis.api;
+
+message ScheduleWorkloadResponse {
+
+}

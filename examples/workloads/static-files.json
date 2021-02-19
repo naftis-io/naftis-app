@@ -1,0 +1,15 @@
+{
+  "containers": [
+    {
+      "name": "webserver",
+      "image": "nginx:1.19.7",
+      "resources": {
+        "memorySize": 64,
+        "cpuCount": 1,
+        "cpuPerformance": 100000
+      },
+      "storage": []
+    }
+  ],
+  "isolation": "CONTAINER_ISOLATION"
+}

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option go_package = "gitlab.com/naftis/app/naftis/pkg/protocol/api";
+
+package io.naftis.api;
+
+import "api/protoc/api/schedule_workload_request_message.proto";
+import "api/protoc/api/schedule_workload_response_message.proto";
+import "api/protoc/api/list_scheduled_workloads_request_message.proto";
+import "api/protoc/api/list_scheduled_workloads_response_message.proto";
+
+service Api {
+  rpc ScheduleWorkload (ScheduleWorkloadRequest) returns (ScheduleWorkloadResponse) {}
+  rpc ListScheduledWorkloads (ListScheduledWorkloadsRequest) returns (ListScheduledWorkloadsResponse) {}
+}

@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option go_package = "gitlab.com/naftis/app/naftis/pkg/protocol/entity";
+
+package io.naftis.entity;
+
+import "api/protoc/entity/workload_spec_message.proto";
+
+/* ScheduledWorkload is message issued by API client to create and publish workload on blockchain. */
+message ScheduledWorkload {
+  // @inject_tag: validate:"required,uuid"
+  string id = 1;
+
+  string state = 2;
+
+  string txId = 3;
+
+  // @inject_tag: validate:"required"
+  io.naftis.entity.WorkloadSpec spec = 4;
+
+}

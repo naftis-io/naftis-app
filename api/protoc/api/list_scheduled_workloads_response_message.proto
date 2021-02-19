@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+option go_package = "gitlab.com/naftis/app/naftis/pkg/protocol/api";
+
+package io.naftis.api;
+
+import "api/protoc/entity/scheduled_workload_message.proto";
+
+message ListScheduledWorkloadsResponse {
+  // @inject_tag: validate:"required"
+  repeated io.naftis.entity.ScheduledWorkload list = 1;
+}

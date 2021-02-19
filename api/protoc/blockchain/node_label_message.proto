@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+option go_package = "gitlab.com/naftis/app/naftis/pkg/protocol/blockchain";
+
+package io.naftis.blockchain.v1;
+
+/* NodeLabel message describe one label attached to node. Node uses label to tag specific node capabilities. */
+message NodeLabel {
+  string label = 1;
+  string value = 2;
+}
+

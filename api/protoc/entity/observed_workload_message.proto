@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option go_package = "gitlab.com/naftis/app/naftis/pkg/protocol/entity";
+
+package io.naftis.entity;
+
+import "api/protoc/entity/workload_spec_message.proto";
+
+/* ObservedWorkload is entity with interesting workload specification, from Runner point of view. Listener watches
+ * market, and if workload matching our capabilities was emitted, the ObserverWorkload is persisted and watched
+ * for future request. */
+message ObservedWorkload {
+  // @inject_tag: validate:"required,uuid"
+  string id = 1;
+
+  string state = 2;
+
+  // @inject_tag: validate:"required"
+  string txId = 3;
+
+  // @inject_tag: validate:"required"
+  io.naftis.entity.WorkloadSpec spec = 4;
+
+
+
+
+}
