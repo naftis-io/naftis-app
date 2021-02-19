@@ -60,3 +60,7 @@ func (a *ApiService) ListScheduledWorkloads(context.Context, *api.ListScheduledW
 		List: resList,
 	}, nil
 }
+
+func (a *ApiService) ListObservedWorkloads(context.Context, *api.ListObservedWorkloadsRequest) (*api.ListObservedWorkloadsResponse, error) {
+	panic("implement me")
+}

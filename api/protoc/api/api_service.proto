@@ -8,8 +8,11 @@ import "api/protoc/api/schedule_workload_request_message.proto";
 import "api/protoc/api/schedule_workload_response_message.proto";
 import "api/protoc/api/list_scheduled_workloads_request_message.proto";
 import "api/protoc/api/list_scheduled_workloads_response_message.proto";
+import "api/protoc/api/list_observed_workloads_request_message.proto";
+import "api/protoc/api/list_observed_workloads_response_message.proto";
 
 service Api {
   rpc ScheduleWorkload (ScheduleWorkloadRequest) returns (ScheduleWorkloadResponse) {}
   rpc ListScheduledWorkloads (ListScheduledWorkloadsRequest) returns (ListScheduledWorkloadsResponse) {}
+  rpc ListObservedWorkloads (ListObservedWorkloadsRequest) returns (ListObservedWorkloadsResponse) {}
 }
