@@ -60,3 +60,26 @@ func (a *ApiService) ListScheduledWorkloads(context.Context, *api.ListScheduledW
 		List: resList,
 	}, nil
 }
+
+func (a *ApiService) ListObservedWorkloads(context.Context, *api.ListObservedWorkloadsRequest) (*api.ListObservedWorkloadsResponse, error) {
+	log := a.log.With().Str("method", "ListObservedWorkloads").Logger()
+
+	list, err := a.query.ListObservedWorkloads().Query()
+	if err != nil {
+		log.Warn().Err(err).Msg("Method call failed.")
+		return nil, err
+	}
+
+	resList := make([]*entity.ObservedWorkload, 0)
+
+	for _, item := range list {
+		itemCopy := item
+		resList = append(resList, &itemCopy)
+	}
+
+	log.Trace().Msg("Method call success.")
+
+	return &api.ListObservedWorkloadsResponse{
+		List: resList,
+	}, nil
+}

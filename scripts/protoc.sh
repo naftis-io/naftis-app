@@ -37,6 +37,8 @@ function main() {
   generate_golang "blockchain" "contract_response_message"
   generate_golang "blockchain" "workload_specification_message"
 
+  generate_golang "api" "list_observed_workloads_request_message"
+  generate_golang "api" "list_observed_workloads_response_message"
   generate_golang "api" "list_scheduled_workloads_request_message"
   generate_golang "api" "list_scheduled_workloads_response_message"
   generate_golang "api" "schedule_workload_request_message"
