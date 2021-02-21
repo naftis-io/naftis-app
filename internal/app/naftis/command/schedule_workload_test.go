@@ -31,8 +31,9 @@ func TestScheduleWorkload_Invoke(t *testing.T) {
 	err = cmd.Invoke(entity.ScheduledWorkload{
 		Id: id.String(),
 		Spec: &entity.WorkloadSpec{
-			Containers: []*entity.WorkloadSpec_Container{},
-			Isolation:  entity.WorkloadSpec_CONTAINER_ISOLATION,
+			Containers:   []*entity.WorkloadSpec_Container{},
+			Isolation:    entity.WorkloadSpec_CONTAINER_ISOLATION,
+			NodeSelector: []*entity.NodeSelector{},
 		},
 	})
 	assert.Error(t, err)
@@ -51,8 +52,9 @@ func TestScheduleWorkload_Invoke(t *testing.T) {
 	err = cmd.Invoke(entity.ScheduledWorkload{
 		Id: id.String(),
 		Spec: &entity.WorkloadSpec{
-			Containers: []*entity.WorkloadSpec_Container{&container},
-			Isolation:  entity.WorkloadSpec_CONTAINER_ISOLATION,
+			Containers:   []*entity.WorkloadSpec_Container{&container},
+			Isolation:    entity.WorkloadSpec_CONTAINER_ISOLATION,
+			NodeSelector: []*entity.NodeSelector{},
 		},
 	})
 	assert.NoError(t, err)
@@ -66,8 +68,9 @@ func TestScheduleWorkload_Invoke(t *testing.T) {
 	err = cmd.Invoke(entity.ScheduledWorkload{
 		Id: id.String(),
 		Spec: &entity.WorkloadSpec{
-			Containers: []*entity.WorkloadSpec_Container{&container},
-			Isolation:  entity.WorkloadSpec_CONTAINER_ISOLATION,
+			Containers:   []*entity.WorkloadSpec_Container{&container},
+			Isolation:    entity.WorkloadSpec_CONTAINER_ISOLATION,
+			NodeSelector: []*entity.NodeSelector{},
 		},
 	})
 	assert.Error(t, err)

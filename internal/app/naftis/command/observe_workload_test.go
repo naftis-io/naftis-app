@@ -66,8 +66,9 @@ func TestObserveWorkload_Invoke(t *testing.T) {
 		Id:   id.String(),
 		TxId: txId,
 		Spec: &entity.WorkloadSpec{
-			Containers: []*entity.WorkloadSpec_Container{&container},
-			Isolation:  entity.WorkloadSpec_CONTAINER_ISOLATION,
+			Containers:   []*entity.WorkloadSpec_Container{&container},
+			Isolation:    entity.WorkloadSpec_CONTAINER_ISOLATION,
+			NodeSelector: []*entity.NodeSelector{},
 		},
 	})
 	assert.NoError(t, err)

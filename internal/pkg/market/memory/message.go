@@ -51,7 +51,7 @@ func (m *Message) Start(ctx context.Context) error {
 		}
 	}()
 
-	m.log.Info().Msg("Market started.")
+	m.log.Info().Msg("Listener started.")
 
 	return nil
 }

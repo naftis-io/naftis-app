@@ -1,4 +1,13 @@
 {
+  "nodeSelector": [
+    {
+      "label": {
+        "key": "node.naftis.io/architecture",
+        "value": "amd64"
+      },
+      "isConstraint": true
+    }
+  ],
   "containers": [
     {
       "name": "webserver",

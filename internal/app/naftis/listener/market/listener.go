@@ -1,4 +1,4 @@
-package listener
+package market
 
 import (
 	"context"
@@ -10,29 +10,32 @@ import (
 	"gitlab.com/naftis/app/naftis/pkg/protocol/entity"
 )
 
-type WorkloadSpecificationFilterCallback func(msg market.WorkloadSpecification) bool
+type WorkloadSpecificationFilter interface {
+	Filter(msg market.WorkloadSpecification) bool
+}
 
-type Market struct {
+// Listener listens for market events.
+type Listener struct {
 	log       zerolog.Logger
 	cmd       *command.Factory
 	market    market.MessageToken
 	queueSize uint64
 
 	workloadSpecification        <-chan market.WorkloadSpecification
-	workloadSpecificationFilters []WorkloadSpecificationFilterCallback
+	workloadSpecificationFilters []WorkloadSpecificationFilter
 }
 
-func NewMarket(cmd *command.Factory, market market.MessageToken, queueSize uint64) *Market {
-	return &Market{
+func NewMarket(cmd *command.Factory, market market.MessageToken, queueSize uint64) *Listener {
+	return &Listener{
 		log:                          log.With().Str("listener", "market").Logger(),
 		cmd:                          cmd,
 		market:                       market,
 		queueSize:                    queueSize,
-		workloadSpecificationFilters: make([]WorkloadSpecificationFilterCallback, 0),
+		workloadSpecificationFilters: []WorkloadSpecificationFilter{},
 	}
 }
 
-func (m *Market) Start(ctx context.Context) error {
+func (m *Listener) Start(ctx context.Context) error {
 	m.workloadSpecification = m.market.ListenWorkloadSpecification(ctx, m.queueSize)
 
 	go func(ctx context.Context) {
@@ -43,11 +46,11 @@ func (m *Market) Start(ctx context.Context) error {
 	return nil
 }
 
-func (m *Market) AttachWorkloadSpecificationFilter(callback WorkloadSpecificationFilterCallback) {
-	m.workloadSpecificationFilters = append(m.workloadSpecificationFilters, callback)
+func (m *Listener) AttachWorkloadSpecificationFilter(filter WorkloadSpecificationFilter) {
+	m.workloadSpecificationFilters = append(m.workloadSpecificationFilters, filter)
 }
 
-func (m *Market) loop(ctx context.Context) {
+func (m *Listener) loop(ctx context.Context) {
 	for {
 		select {
 		case msg := <-m.workloadSpecification:
@@ -59,11 +62,11 @@ func (m *Market) loop(ctx context.Context) {
 	}
 }
 
-func (m *Market) processWorkloadSpecification(msg market.WorkloadSpecification) {
+func (m *Listener) processWorkloadSpecification(msg market.WorkloadSpecification) {
 	log := m.log.With().Str("txId", msg.TxId).Logger()
 
 	for _, filter := range m.workloadSpecificationFilters {
-		if accept := filter(msg); !accept {
+		if accept := filter.Filter(msg); !accept {
 			log.Debug().Msg("Workload specification rejected by filter.")
 			return
 		}

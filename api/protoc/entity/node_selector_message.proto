@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option go_package = "gitlab.com/naftis/app/naftis/pkg/protocol/entity";
+
+package io.naftis.entity;
+
+import "api/protoc/entity/node_label_message.proto";
+
+/* NodeSelector is entity that contains node label and constraint enforcement. */
+message NodeSelector {
+  // @inject_tag: validate:"required"
+  NodeLabel label = 1;
+
+  // @inject_tag: validate:"required"
+  bool isConstraint = 2;
+}

@@ -4,6 +4,8 @@ option go_package = "gitlab.com/naftis/app/naftis/pkg/protocol/entity";
 
 package io.naftis.entity;
 
+import "api/protoc/entity/node_selector_message.proto";
+
 message WorkloadSpec {
   message Container {
     // @inject_tag: validate:"required,printascii"
@@ -38,4 +40,7 @@ message WorkloadSpec {
   }
   // @inject_tag: validate:"required"
   Isolation isolation = 3;
+
+  // @inject_tag: validate:"required"
+  repeated io.naftis.entity.NodeSelector nodeSelector = 4;
 }

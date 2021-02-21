@@ -25,6 +25,7 @@ const (
 // of the legacy proto package is being used.
 const _ = proto.ProtoPackageIsVersion4
 
+// NodeLabel contains label key and value. This entity is used to select on which nodes workload should be run.
 type NodeLabel struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

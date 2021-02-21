@@ -8,7 +8,8 @@ import (
 	"gitlab.com/naftis/app/naftis/internal/app/naftis/command"
 	"gitlab.com/naftis/app/naftis/internal/app/naftis/label"
 	"gitlab.com/naftis/app/naftis/internal/app/naftis/label/source"
-	"gitlab.com/naftis/app/naftis/internal/app/naftis/listener"
+	marketListener "gitlab.com/naftis/app/naftis/internal/app/naftis/listener/market"
+	"gitlab.com/naftis/app/naftis/internal/app/naftis/listener/market/filter"
 	"gitlab.com/naftis/app/naftis/internal/app/naftis/query"
 	"gitlab.com/naftis/app/naftis/internal/app/naftis/reconciler"
 	"gitlab.com/naftis/app/naftis/internal/pkg/market"
@@ -29,7 +30,7 @@ type App struct {
 	query             *query.Factory
 	labels            *label.Container
 	market            market.MessageToken
-	marketListener    *listener.Market
+	marketListener    *marketListener.Listener
 	storage           storage.Container
 	apiServer         *api.Server
 	apiService        *api.ApiService
@@ -53,7 +54,8 @@ func NewApp(config AppConfig) (*App, error) {
 
 	market := memoryMarket.NewMessage()
 
-	marketListener := listener.NewMarket(cmd, market, 64)
+	marketListener := marketListener.NewMarket(cmd, market, 64)
+	marketListener.AttachWorkloadSpecificationFilter(filter.NewMarketWorkloadSpecificationNodeSelector(labels))
 
 	scheduledWorkload := reconciler.NewScheduledWorkload(storage, market)
 

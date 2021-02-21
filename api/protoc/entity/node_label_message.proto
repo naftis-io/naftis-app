@@ -4,6 +4,7 @@ option go_package = "gitlab.com/naftis/app/naftis/pkg/protocol/entity";
 
 package io.naftis.entity;
 
+/* NodeLabel contains label key and value. This entity is used to select on which nodes workload should be run. */
 message NodeLabel {
   // @inject_tag: validate:"required,fqdn"
   string key = 1;
