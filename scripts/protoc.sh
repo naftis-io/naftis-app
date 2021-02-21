@@ -48,6 +48,7 @@ function main() {
   generate_golang "entity" "scheduled_workload_message"
   generate_golang "entity" "observed_workload_message"
   generate_golang "entity" "workload_spec_message"
+  generate_golang "entity" "node_label_message"
 
   echo -e "Done!"
 }

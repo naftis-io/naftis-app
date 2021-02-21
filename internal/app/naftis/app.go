@@ -2,8 +2,12 @@ package naftis
 
 import (
 	"context"
+	"fmt"
+	"github.com/rs/zerolog/log"
 	"gitlab.com/naftis/app/naftis/internal/app/naftis/api"
 	"gitlab.com/naftis/app/naftis/internal/app/naftis/command"
+	"gitlab.com/naftis/app/naftis/internal/app/naftis/label"
+	"gitlab.com/naftis/app/naftis/internal/app/naftis/label/source"
 	"gitlab.com/naftis/app/naftis/internal/app/naftis/listener"
 	"gitlab.com/naftis/app/naftis/internal/app/naftis/query"
 	"gitlab.com/naftis/app/naftis/internal/app/naftis/reconciler"
@@ -23,6 +27,7 @@ type App struct {
 	config            AppConfig
 	cmd               *command.Factory
 	query             *query.Factory
+	labels            *label.Container
 	market            market.MessageToken
 	marketListener    *listener.Market
 	storage           storage.Container
@@ -42,6 +47,9 @@ func NewApp(config AppConfig) (*App, error) {
 	storage := memory.NewContainer()
 	cmd := command.NewFactory(storage)
 	query := query.NewFactory(storage)
+
+	labels := label.NewContainer()
+	labels.AttachSource(source.NewOs())
 
 	market := memoryMarket.NewMessage()
 
@@ -63,6 +71,7 @@ func NewApp(config AppConfig) (*App, error) {
 		config:            config,
 		cmd:               cmd,
 		query:             query,
+		labels:            labels,
 		storage:           storage,
 		apiServer:         apiServer,
 		scheduledWorkload: scheduledWorkload,
@@ -75,6 +84,13 @@ func NewApp(config AppConfig) (*App, error) {
 
 func (a *App) Start(ctx context.Context) error {
 	var err error
+
+	err = a.labels.Refresh()
+	if err != nil {
+		return err
+	}
+
+	a.logNodeLabels()
 
 	err = a.market.Start(ctx)
 	if err != nil {
@@ -97,4 +113,12 @@ func (a *App) Start(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+func (a *App) logNodeLabels() {
+	for _, label := range a.labels.List() {
+		log.Info().
+			Str("label", fmt.Sprintf("%s: %s", label.Key, label.Value)).
+			Msg("Discovered node label.")
+	}
 }

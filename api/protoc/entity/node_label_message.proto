@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+option go_package = "gitlab.com/naftis/app/naftis/pkg/protocol/entity";
+
+package io.naftis.entity;
+
+message NodeLabel {
+  // @inject_tag: validate:"required,fqdn"
+  string key = 1;
+
+  // @inject_tag: validate:"required,alphanum"
+  string value = 2;
+}
