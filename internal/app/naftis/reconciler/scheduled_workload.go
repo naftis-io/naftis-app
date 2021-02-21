@@ -7,8 +7,8 @@ import (
 	"github.com/rs/zerolog/log"
 	"gitlab.com/naftis/app/naftis/internal/pkg/market"
 	"gitlab.com/naftis/app/naftis/internal/pkg/storage"
-	"gitlab.com/naftis/app/naftis/pkg/protocol/blockchain"
 	"gitlab.com/naftis/app/naftis/pkg/protocol/entity"
+	marketProtocol "gitlab.com/naftis/app/naftis/pkg/protocol/market"
 	"time"
 )
 
@@ -142,7 +142,7 @@ func (s *scheduledWorkloadState) onEnterState(event *fsm.Event) {
 }
 
 func (s *scheduledWorkloadState) onPublishOnMarket(event *fsm.Event) {
-	txId, err := s.reconciler.market.EmitWorkloadSpecification(s.reconciler.ctx, blockchain.WorkloadSpecification{
+	txId, err := s.reconciler.market.EmitWorkloadSpecification(s.reconciler.ctx, marketProtocol.WorkloadSpecification{
 		Spec:               s.entity.Spec,
 		PrincipalPublicKey: "",
 	})

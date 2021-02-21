@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-option go_package = "gitlab.com/naftis/app/naftis/pkg/protocol/blockchain";
+option go_package = "gitlab.com/naftis/app/naftis/pkg/protocol/market";
 
-package io.naftis.blockchain.v1;
+package io.naftis.market;
 
 /* ContractResponse message is published to blockchain by Runner's side. The message contains offered price and ip
  * address of Runner's system. When this message is published to blockchain and read by Principal, Principal SHOULD

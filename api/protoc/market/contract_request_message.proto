@@ -1,17 +1,14 @@
 syntax = "proto3";
 
-option go_package = "gitlab.com/naftis/app/naftis/pkg/protocol/blockchain";
+option go_package = "gitlab.com/naftis/app/naftis/pkg/protocol/market";
 
-package io.naftis.blockchain.v1;
-
-import "api/protoc/blockchain/node_label_message.proto";
+package io.naftis.market;
 
 /* ContractProposal message is published to blockchain by Principal side. The message contains price and expected
  * contract duration. Specification of workload MUST be published before this message, and MUST be referenced in this
  * message. */
 message ContractRequest {
   string workload_specification = 1;
-  repeated NodeLabel node_labels = 2;
   uint32 price_per_minute = 3;
   uint32 contract_duration = 4;
 }

@@ -32,10 +32,9 @@ function main() {
   verify "protoc-gen-go-grpc"
   verify "protoc-go-inject-tag"
 
-  generate_golang "blockchain" "node_label_message"
-  generate_golang "blockchain" "contract_request_message"
-  generate_golang "blockchain" "contract_response_message"
-  generate_golang "blockchain" "workload_specification_message"
+  generate_golang "market" "contract_request_message"
+  generate_golang "market" "contract_response_message"
+  generate_golang "market" "workload_specification_message"
 
   generate_golang "api" "list_observed_workloads_request_message"
   generate_golang "api" "list_observed_workloads_response_message"

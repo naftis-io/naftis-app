@@ -3,24 +3,24 @@ package market
 import (
 	"context"
 	"errors"
-	"gitlab.com/naftis/app/naftis/pkg/protocol/blockchain"
+	"gitlab.com/naftis/app/naftis/pkg/protocol/market"
 )
 
 type WorkloadSpecification struct {
 	TxId string
-	Msg  blockchain.WorkloadSpecification
+	Msg  market.WorkloadSpecification
 }
 
 // Message interface describe minimum function set that allow sending messages to market.
 type Message interface {
 	Start(ctx context.Context) error
 
-	EmitContractRequest(ctx context.Context, msg blockchain.ContractRequest) (string, error)
-	EmitContractResponse(ctx context.Context, msg blockchain.ContractResponse) (string, error)
-	EmitWorkloadSpecification(ctx context.Context, msg blockchain.WorkloadSpecification) (string, error)
+	EmitContractRequest(ctx context.Context, msg market.ContractRequest) (string, error)
+	EmitContractResponse(ctx context.Context, msg market.ContractResponse) (string, error)
+	EmitWorkloadSpecification(ctx context.Context, msg market.WorkloadSpecification) (string, error)
 
-	ListenContractRequest(ctx context.Context, queueSize uint64) <-chan blockchain.ContractRequest
-	ListenContractResponse(ctx context.Context, queueSize uint64) <-chan blockchain.ContractResponse
+	ListenContractRequest(ctx context.Context, queueSize uint64) <-chan market.ContractRequest
+	ListenContractResponse(ctx context.Context, queueSize uint64) <-chan market.ContractResponse
 	ListenWorkloadSpecification(ctx context.Context, queueSize uint64) <-chan WorkloadSpecification
 }
 

@@ -3,7 +3,7 @@ package memory
 import (
 	"context"
 	"github.com/stretchr/testify/assert"
-	"gitlab.com/naftis/app/naftis/pkg/protocol/blockchain"
+	"gitlab.com/naftis/app/naftis/pkg/protocol/market"
 	"testing"
 	"time"
 )
@@ -16,7 +16,7 @@ func TestMessage_ListenWorkloadSpecification(t *testing.T) {
 	m := NewMessage()
 	m.Start(ctx)
 
-	msg := blockchain.WorkloadSpecification{}
+	msg := market.WorkloadSpecification{}
 
 	ch1 := m.ListenWorkloadSpecification(ctx, 3)
 	assert.Empty(t, ch1)
@@ -62,7 +62,7 @@ func TestMessage_EmitWorkloadSpecification(t *testing.T) {
 	m := NewMessage()
 	m.Start(ctx)
 
-	msg := blockchain.WorkloadSpecification{}
+	msg := market.WorkloadSpecification{}
 
 	txId, err = m.EmitWorkloadSpecification(ctx, msg)
 	assert.NotEmpty(t, txId)

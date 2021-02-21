@@ -5,8 +5,8 @@ import (
 	"gitlab.com/naftis/app/naftis/internal/app/naftis/label"
 	"gitlab.com/naftis/app/naftis/internal/app/naftis/label/source"
 	"gitlab.com/naftis/app/naftis/internal/pkg/market"
-	"gitlab.com/naftis/app/naftis/pkg/protocol/blockchain"
 	"gitlab.com/naftis/app/naftis/pkg/protocol/entity"
+	marketProtocol "gitlab.com/naftis/app/naftis/pkg/protocol/market"
 	"testing"
 )
 
@@ -14,7 +14,7 @@ func TestMarketWorkloadSpecificationNodeSelector_Filter(t *testing.T) {
 	labels := label.NewContainer()
 
 	invalidWithoutConstraintMsg := market.WorkloadSpecification{
-		Msg: blockchain.WorkloadSpecification{
+		Msg: marketProtocol.WorkloadSpecification{
 			Spec: &entity.WorkloadSpec{
 				NodeSelector: []*entity.NodeSelector{
 					&entity.NodeSelector{
@@ -30,7 +30,7 @@ func TestMarketWorkloadSpecificationNodeSelector_Filter(t *testing.T) {
 	}
 
 	validMsg := market.WorkloadSpecification{
-		Msg: blockchain.WorkloadSpecification{
+		Msg: marketProtocol.WorkloadSpecification{
 			Spec: &entity.WorkloadSpec{
 				NodeSelector: []*entity.NodeSelector{
 					&entity.NodeSelector{
@@ -46,7 +46,7 @@ func TestMarketWorkloadSpecificationNodeSelector_Filter(t *testing.T) {
 	}
 
 	invalidMsg := market.WorkloadSpecification{
-		Msg: blockchain.WorkloadSpecification{
+		Msg: marketProtocol.WorkloadSpecification{
 			Spec: &entity.WorkloadSpec{
 				NodeSelector: []*entity.NodeSelector{
 					&entity.NodeSelector{
