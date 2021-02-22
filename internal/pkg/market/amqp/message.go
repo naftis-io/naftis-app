@@ -16,11 +16,11 @@ func (m *Message) Start(ctx context.Context) error {
 	panic("implement me")
 }
 
-func (m *Message) ListenContractRequest(ctx context.Context, queueSize uint64) <-chan market.ContractRequest {
+func (m *Message) ListenContractRequest(ctx context.Context, queueSize uint64) <-chan market.ContractAccept {
 	panic("implement me")
 }
 
-func (m *Message) ListenContractResponse(ctx context.Context, queueSize uint64) <-chan market.ContractResponse {
+func (m *Message) ListenContractResponse(ctx context.Context, queueSize uint64) <-chan market.ContractProposal {
 	panic("implement me")
 }
 
@@ -28,11 +28,11 @@ func (m *Message) ListenWorkloadSpecification(ctx context.Context, queueSize uin
 	panic("implement me")
 }
 
-func (m *Message) EmitContractRequest(ctx context.Context, msg market.ContractRequest) (string, error) {
+func (m *Message) EmitContractRequest(ctx context.Context, msg market.ContractAccept) (string, error) {
 	panic("implement me")
 }
 
-func (m *Message) EmitContractResponse(ctx context.Context, msg market.ContractResponse) (string, error) {
+func (m *Message) EmitContractResponse(ctx context.Context, msg market.ContractProposal) (string, error) {
 	panic("implement me")
 }
 

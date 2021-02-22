@@ -143,8 +143,7 @@ func (s *scheduledWorkloadState) onEnterState(event *fsm.Event) {
 
 func (s *scheduledWorkloadState) onPublishOnMarket(event *fsm.Event) {
 	txId, err := s.reconciler.market.EmitWorkloadSpecification(s.reconciler.ctx, marketProtocol.WorkloadSpecification{
-		Spec:               s.entity.Spec,
-		PrincipalPublicKey: "",
+		Spec: s.entity.Spec,
 	})
 	if err != nil {
 		event.Cancel(err)

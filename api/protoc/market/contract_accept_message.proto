@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+option go_package = "gitlab.com/naftis/app/naftis/pkg/protocol/market";
+
+package io.naftis.market;
+
+/* ContractAccept message is published to market by Principal side. */
+message ContractAccept {
+
+}

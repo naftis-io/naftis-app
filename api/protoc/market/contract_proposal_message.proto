@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option go_package = "gitlab.com/naftis/app/naftis/pkg/protocol/market";
+
+package io.naftis.market;
+
+import "api/protoc/entity/contract_specification_message.proto";
+
+/* ContractProposal message is published to market by Runners side. The message contains proposed by Runner reward
+ * specification. */
+message ContractProposal {
+  // @inject_tag: validate:"required"
+  io.naftis.entity.ContractSpecification contract = 1;
+
+  // @inject_tag: validate:"required"
+  string signature = 2;
+}

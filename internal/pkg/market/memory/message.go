@@ -12,11 +12,11 @@ import (
 type Message struct {
 	log zerolog.Logger
 
-	contractRequest         chan marketProtocol.ContractRequest
-	contractRequestListener []chan marketProtocol.ContractRequest
+	contractRequest         chan marketProtocol.ContractAccept
+	contractRequestListener []chan marketProtocol.ContractAccept
 
-	contractResponse         chan marketProtocol.ContractResponse
-	contractResponseListener []chan marketProtocol.ContractResponse
+	contractResponse         chan marketProtocol.ContractProposal
+	contractResponseListener []chan marketProtocol.ContractProposal
 
 	workloadSpecification         chan market.WorkloadSpecification
 	workloadSpecificationListener []chan market.WorkloadSpecification
@@ -26,11 +26,11 @@ func NewMessage() *Message {
 	return &Message{
 		log: log.With().Str("market", "memory").Logger(),
 
-		contractRequest:         make(chan marketProtocol.ContractRequest, 16),
-		contractRequestListener: make([]chan marketProtocol.ContractRequest, 0),
+		contractRequest:         make(chan marketProtocol.ContractAccept, 16),
+		contractRequestListener: make([]chan marketProtocol.ContractAccept, 0),
 
-		contractResponse:         make(chan marketProtocol.ContractResponse, 16),
-		contractResponseListener: make([]chan marketProtocol.ContractResponse, 0),
+		contractResponse:         make(chan marketProtocol.ContractProposal, 16),
+		contractResponseListener: make([]chan marketProtocol.ContractProposal, 0),
 
 		workloadSpecification:         make(chan market.WorkloadSpecification, 16),
 		workloadSpecificationListener: make([]chan market.WorkloadSpecification, 0),
@@ -56,19 +56,19 @@ func (m *Message) Start(ctx context.Context) error {
 	return nil
 }
 
-func (m *Message) ListenContractRequest(ctx context.Context, queueSize uint64) <-chan marketProtocol.ContractRequest {
+func (m *Message) ListenContractRequest(ctx context.Context, queueSize uint64) <-chan marketProtocol.ContractAccept {
 	panic("implement me")
 }
 
-func (m *Message) notifyContractRequestListeners(ctx context.Context, msg marketProtocol.ContractRequest) {
+func (m *Message) notifyContractRequestListeners(ctx context.Context, msg marketProtocol.ContractAccept) {
 
 }
 
-func (m *Message) ListenContractResponse(ctx context.Context, queueSize uint64) <-chan marketProtocol.ContractResponse {
+func (m *Message) ListenContractResponse(ctx context.Context, queueSize uint64) <-chan marketProtocol.ContractProposal {
 	panic("implement me")
 }
 
-func (m *Message) notifyContractResponseListeners(ctx context.Context, msg marketProtocol.ContractResponse) {
+func (m *Message) notifyContractResponseListeners(ctx context.Context, msg marketProtocol.ContractProposal) {
 
 }
 
@@ -94,11 +94,11 @@ func (m *Message) notifyWorkloadSpecificationListeners(ctx context.Context, msg 
 	}
 }
 
-func (m *Message) EmitContractRequest(ctx context.Context, msg marketProtocol.ContractRequest) (string, error) {
+func (m *Message) EmitContractRequest(ctx context.Context, msg marketProtocol.ContractAccept) (string, error) {
 	panic("implement me")
 }
 
-func (m *Message) EmitContractResponse(ctx context.Context, msg marketProtocol.ContractResponse) (string, error) {
+func (m *Message) EmitContractResponse(ctx context.Context, msg marketProtocol.ContractProposal) (string, error) {
 	panic("implement me")
 }
 

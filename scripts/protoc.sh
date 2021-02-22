@@ -32,8 +32,8 @@ function main() {
   verify "protoc-gen-go-grpc"
   verify "protoc-go-inject-tag"
 
-  generate_golang "market" "contract_request_message"
-  generate_golang "market" "contract_response_message"
+  generate_golang "market" "contract_proposal_message"
+  generate_golang "market" "contract_accept_message"
   generate_golang "market" "workload_specification_message"
 
   generate_golang "api" "list_observed_workloads_request_message"
@@ -49,6 +49,7 @@ function main() {
   generate_golang "entity" "workload_spec_message"
   generate_golang "entity" "node_label_message"
   generate_golang "entity" "node_selector_message"
+  generate_golang "entity" "contract_specification_message"
 
   echo -e "Done!"
 }

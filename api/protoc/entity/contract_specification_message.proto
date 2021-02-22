@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option go_package = "gitlab.com/naftis/app/naftis/pkg/protocol/entity";
+
+package io.naftis.entity;
+
+/* ContractSpec is entity with contract specification. This entity is used to establish reward (pricing) model used in
+ * contract between Principal and Runner. */
+message ContractSpecification {
+  // @inject_tag: validate:"required,min=1,max=100000000"
+  uint32 pricePerMinute = 1;
+
+  // @inject_tag: validate:"required,min=1,max=10080"
+  uint32 tokenSendInterval = 2;
+
+  // @inject_tag validate:"required,min=1,max=129600"
+  uint32 duration = 3;
+}
