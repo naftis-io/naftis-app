@@ -17,6 +17,11 @@ With Naftis You can:
 - execute binary on container instance with an interactive console,
 - select node capabilities using an easy label mechanism
 
+
+## Project status
+
+The project is currently in the early development stage. API is not stable, and documentation may be not actual.
+
 ## Licence
 
 Naftis is distributed under the MIT License. See `LICENSE.md` for more information.
