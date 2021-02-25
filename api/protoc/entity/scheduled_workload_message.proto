@@ -5,17 +5,33 @@ option go_package = "gitlab.com/naftis/app/naftis/pkg/protocol/entity";
 package io.naftis.entity;
 
 import "api/protoc/entity/workload_spec_message.proto";
+import "api/protoc/entity/contract_proposal_message.proto";
+import "api/protoc/entity/state_message.proto";
 
 /* ScheduledWorkload is message issued by API client to create and publish workload on blockchain. */
 message ScheduledWorkload {
   // @inject_tag: validate:"required,uuid"
   string id = 1;
 
-  string state = 2;
+  io.naftis.entity.State state = 2;
 
-  string txId = 3;
+  string workloadSpecificationMarketId = 3;
 
   // @inject_tag: validate:"required"
   io.naftis.entity.WorkloadSpec spec = 4;
+
+  // @inject_tag: validate:"required"
+  io.naftis.entity.ContractProposal principalProposal = 5;
+
+  message RunnerProposal {
+    // @inject_tag: validate:"required"
+    io.naftis.entity.ContractProposal proposal = 1;
+
+    // @inject_tag: validate:"required"
+    string contractProposalMarketId = 2;
+  }
+  repeated RunnerProposal runnersProposals = 6;
+
+  RunnerProposal acceptedRunnerProposal = 7;
 
 }

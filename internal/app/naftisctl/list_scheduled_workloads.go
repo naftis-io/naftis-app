@@ -2,7 +2,6 @@ package naftisctl
 
 import (
 	"context"
-	"fmt"
 	"github.com/olekukonko/tablewriter"
 	"gitlab.com/naftis/app/naftis/internal/pkg/validator"
 	"gitlab.com/naftis/app/naftis/pkg/protocol/api"
@@ -39,10 +38,9 @@ func (a *ListScheduledWorkloadsApp) Start(ctx context.Context) error {
 	table.SetHeader([]string{"ID", "Status"})
 
 	for _, item := range l.List {
-		fmt.Print(item.Id)
 		table.Append([]string{
 			item.Id,
-			item.State,
+			item.State.Current,
 		})
 	}
 

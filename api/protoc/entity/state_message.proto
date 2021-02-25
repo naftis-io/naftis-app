@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option go_package = "gitlab.com/naftis/app/naftis/pkg/protocol/entity";
+
+package io.naftis.entity;
+
+message State {
+  string current = 1;
+  string previous = 2;
+  int64 backOffTimestamp = 3;
+}

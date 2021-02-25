@@ -51,10 +51,19 @@ func (a *ScheduleWorkloadApp) Start(ctx context.Context) error {
 
 	id := uuid.New()
 
+	contract := entity.ContractSpecification{
+		PricePerMinute:    5000,
+		TokenSendInterval: 1,
+		Duration:          60,
+	}
+
 	_, err = a.app.api.ScheduleWorkload(ctx, &api.ScheduleWorkloadRequest{
 		Spec: &entity.ScheduledWorkload{
 			Id:   id.String(),
 			Spec: &workloadSpec,
+			PrincipalProposal: &entity.ContractProposal{
+				Contract: &contract,
+			},
 		},
 	})
 	if err != nil {

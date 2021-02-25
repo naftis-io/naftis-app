@@ -2,15 +2,17 @@ package storage
 
 import (
 	"errors"
+	"gitlab.com/naftis/app/naftis/internal/pkg/state"
 	"gitlab.com/naftis/app/naftis/pkg/protocol/entity"
 )
 
 type ObservedWorkload interface {
-	Create(entity entity.ObservedWorkload) error
+	state.EntityStateStorage
 	Get(id string) (*entity.ObservedWorkload, error)
-	GetByTxId(txId string) (*entity.ObservedWorkload, error)
+	GetByWorkloadSpecificationMarketId(marketId string) (*entity.ObservedWorkload, error)
+	Create(entity entity.ObservedWorkload) error
 	List() ([]entity.ObservedWorkload, error)
-	UpdateState(id string, state string) error
+	SetPrincipalAcceptance(id string, acceptance entity.ObservedWorkload_PrincipalAcceptance) error
 }
 
 var (

@@ -1,39 +1,32 @@
 package command
 
 import (
-	"github.com/rs/zerolog/log"
-	"gitlab.com/naftis/app/naftis/internal/pkg/storage"
+	"context"
+	"gitlab.com/naftis/app/naftis/internal/app/naftis/service"
 	"gitlab.com/naftis/app/naftis/internal/pkg/validator"
 	"gitlab.com/naftis/app/naftis/pkg/protocol/entity"
 )
 
 type ScheduleWorkload struct {
-	storage storage.ScheduledWorkload
+	service *service.ScheduledWorkload
 }
 
-func NewScheduleWorkload(storage storage.ScheduledWorkload) *ScheduleWorkload {
+func NewScheduleWorkload(service *service.ScheduledWorkload) *ScheduleWorkload {
 	return &ScheduleWorkload{
-		storage: storage,
+		service: service,
 	}
 }
 
-func (cmd *ScheduleWorkload) Invoke(workload entity.ScheduledWorkload) error {
-	err := validator.New().Struct(workload)
-
+func (cmd *ScheduleWorkload) Invoke(ctx context.Context, scheduledWorkload entity.ScheduledWorkload) error {
+	err := validator.New().Struct(scheduledWorkload)
 	if err != nil {
 		return err
 	}
 
-	workload.State = "new"
-
-	err = cmd.storage.Create(workload)
+	err = cmd.service.Schedule(ctx, scheduledWorkload)
 	if err != nil {
 		return err
 	}
-
-	log.Info().
-		Str("scheduledWorkloadId", workload.Id).
-		Msg("Scheduled new workload.")
 
 	return nil
 }

@@ -35,13 +35,13 @@ func (a *ListObservedWorkloadsApp) Start(ctx context.Context) error {
 	}
 
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"ID", "Status", "TxID"})
+	table.SetHeader([]string{"ID", "Status", "WorkloadSpecificationMarketId"})
 
 	for _, item := range l.List {
 		table.Append([]string{
 			item.Id,
-			item.State,
-			item.TxId,
+			item.State.Current,
+			item.WorkloadSpecificationMarketId,
 		})
 	}
 

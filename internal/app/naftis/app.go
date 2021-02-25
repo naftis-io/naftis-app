@@ -11,17 +11,22 @@ import (
 	marketListener "gitlab.com/naftis/app/naftis/internal/app/naftis/listener/market"
 	"gitlab.com/naftis/app/naftis/internal/app/naftis/listener/market/filter"
 	"gitlab.com/naftis/app/naftis/internal/app/naftis/query"
-	"gitlab.com/naftis/app/naftis/internal/app/naftis/reconciler"
+	"gitlab.com/naftis/app/naftis/internal/app/naftis/service"
+	"gitlab.com/naftis/app/naftis/internal/app/naftis/state"
+	"gitlab.com/naftis/app/naftis/internal/pkg/contract"
 	"gitlab.com/naftis/app/naftis/internal/pkg/market"
 	memoryMarket "gitlab.com/naftis/app/naftis/internal/pkg/market/memory"
+	"gitlab.com/naftis/app/naftis/internal/pkg/price"
 	"gitlab.com/naftis/app/naftis/internal/pkg/storage"
 	"gitlab.com/naftis/app/naftis/internal/pkg/storage/memory"
 	"gitlab.com/naftis/app/naftis/internal/pkg/validator"
+	"gitlab.com/naftis/app/naftis/pkg/protocol/entity"
 )
 
 type AppConfig struct {
-	GrpcApiServerListenAddress string `validate:"required,ip"`
-	GrpcApiServerListenPort    uint64 `validate:"required,max=65535"`
+	GrpcApiServerListenAddress string           `validate:"required,ip"`
+	GrpcApiServerListenPort    uint64           `validate:"required,max=65535"`
+	PriceList                  entity.PriceList `validate:"required"`
 }
 
 type App struct {
@@ -32,9 +37,12 @@ type App struct {
 	market            market.MessageToken
 	marketListener    *marketListener.Listener
 	storage           storage.Container
+	priceCalculator   *price.Calculator
+	contractSelector  *contract.Selector
 	apiServer         *api.Server
 	apiService        *api.ApiService
-	scheduledWorkload *reconciler.ScheduledWorkload
+	scheduledWorkload *state.ScheduledWorkload
+	observedWorkload  *state.ObservedWorkload
 }
 
 func NewApp(config AppConfig) (*App, error) {
@@ -45,19 +53,26 @@ func NewApp(config AppConfig) (*App, error) {
 		return nil, err
 	}
 
+	market := memoryMarket.NewMessage()
 	storage := memory.NewContainer()
-	cmd := command.NewFactory(storage)
+
+	contractSelector := contract.NewSelector()
+	priceCalculator := price.NewCalculator(config.PriceList)
+
+	services := service.NewContainer(storage, market, priceCalculator, contractSelector)
+
+	cmd := command.NewFactory(services)
 	query := query.NewFactory(storage)
 
 	labels := label.NewContainer()
 	labels.AttachSource(source.NewOs())
 
-	market := memoryMarket.NewMessage()
-
-	marketListener := marketListener.NewMarket(cmd, market, 64)
+	marketListener := marketListener.NewMarket(market, services, 64)
 	marketListener.AttachWorkloadSpecificationFilter(filter.NewMarketWorkloadSpecificationNodeSelector(labels))
+	marketListener.AttachContractProposalFilter(filter.NewContractProposalScheduledWorkload(storage.ScheduledWorkload()))
 
-	scheduledWorkload := reconciler.NewScheduledWorkload(storage, market)
+	scheduledWorkload := state.NewScheduledWorkload(storage.ScheduledWorkload(), services.ScheduledWorkload())
+	observedWorkload := state.NewObservedWorkload(storage.ObservedWorkload(), services.ObservedWorkload())
 
 	apiService := api.NewApiService(cmd, query)
 
@@ -74,9 +89,11 @@ func NewApp(config AppConfig) (*App, error) {
 		cmd:               cmd,
 		query:             query,
 		labels:            labels,
+		priceCalculator:   priceCalculator,
 		storage:           storage,
 		apiServer:         apiServer,
 		scheduledWorkload: scheduledWorkload,
+		observedWorkload:  observedWorkload,
 		market:            market,
 		marketListener:    marketListener,
 	}
@@ -91,8 +108,6 @@ func (a *App) Start(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-
-	a.logNodeLabels()
 
 	err = a.market.Start(ctx)
 	if err != nil {
@@ -114,6 +129,14 @@ func (a *App) Start(ctx context.Context) error {
 		return err
 	}
 
+	err = a.observedWorkload.Start(ctx)
+	if err != nil {
+		return err
+	}
+
+	a.logNodeLabels()
+	a.logNodePrices()
+
 	return nil
 }
 
@@ -121,6 +144,19 @@ func (a *App) logNodeLabels() {
 	for _, label := range a.labels.List() {
 		log.Info().
 			Str("label", fmt.Sprintf("%s: %s", label.Key, label.Value)).
-			Msg("Discovered node label.")
+			Msg("Node label.")
 	}
+}
+
+func (a *App) logNodePrices() {
+	log.Info().
+		Str("kind", "MemoryPerMinute").
+		Uint32("pricePerMinute", a.config.PriceList.MemoryPerMinute).
+		Msg("Price list.")
+
+	log.Info().
+		Str("kind", "CpuPerMinute").
+		Uint32("pricePerMinute", a.config.PriceList.CpuPerMinute).
+		Msg("Price list.")
+
 }

@@ -4,7 +4,16 @@ option go_package = "gitlab.com/naftis/app/naftis/pkg/protocol/market";
 
 package io.naftis.market;
 
+import "api/protoc/entity/contract_accept_message.proto";
+
 /* ContractAccept message is published to market by Principal side. */
 message ContractAccept {
+  // @inject_tag: validate:"required"
+  string workloadSpecificationMarketId = 1;
 
+  // @inject_tag: validate:"required"
+  string contractProposalMarketId = 2;
+
+  // @inject_tag: validate:"required"
+  io.naftis.entity.ContractAccept accept = 3;
 }

@@ -49,7 +49,11 @@ function main() {
   generate_golang "entity" "workload_spec_message"
   generate_golang "entity" "node_label_message"
   generate_golang "entity" "node_selector_message"
+  generate_golang "entity" "state_message"
   generate_golang "entity" "contract_specification_message"
+  generate_golang "entity" "contract_proposal_message"
+  generate_golang "entity" "contract_accept_message"
+  generate_golang "entity" "price_list_message"
 
   echo -e "Done!"
 }

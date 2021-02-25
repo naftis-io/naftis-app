@@ -7,6 +7,7 @@ import (
 	"github.com/rs/zerolog/log"
 	"gitlab.com/naftis/app/naftis/internal/app/naftis"
 	"gitlab.com/naftis/app/naftis/internal/pkg/env"
+	"gitlab.com/naftis/app/naftis/pkg/protocol/entity"
 	"os"
 	"time"
 )
@@ -22,6 +23,10 @@ func main() {
 	cfg := naftis.AppConfig{
 		GrpcApiServerListenAddress: "",
 		GrpcApiServerListenPort:    0,
+		PriceList: entity.PriceList{
+			CpuPerMinute:    1000,
+			MemoryPerMinute: 50,
+		},
 	}
 
 	flag.StringVar(&cfg.GrpcApiServerListenAddress,

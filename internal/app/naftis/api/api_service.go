@@ -24,10 +24,10 @@ func NewApiService(cmd *command.Factory, query *query.Factory) *ApiService {
 	}
 }
 
-func (a *ApiService) ScheduleWorkload(_ context.Context, req *api.ScheduleWorkloadRequest) (*api.ScheduleWorkloadResponse, error) {
+func (a *ApiService) ScheduleWorkload(ctx context.Context, req *api.ScheduleWorkloadRequest) (*api.ScheduleWorkloadResponse, error) {
 	log := a.log.With().Str("method", "ScheduleWorkload").Logger()
 
-	err := a.cmd.ScheduleWorkload().Invoke(*req.Spec)
+	err := a.cmd.ScheduleWorkload().Invoke(ctx, *req.Spec)
 	if err != nil {
 		log.Warn().Err(err).Msg("Method call failed.")
 		return nil, err

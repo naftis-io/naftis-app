@@ -4,14 +4,13 @@ option go_package = "gitlab.com/naftis/app/naftis/pkg/protocol/market";
 
 package io.naftis.market;
 
-import "api/protoc/entity/contract_specification_message.proto";
+import "api/protoc/entity/contract_proposal_message.proto";
 
-/* ContractProposal message is published to market by Runners side. The message contains proposed by Runner reward
- * specification. */
+/* ContractProposal message is published to market by Runners side. This message contains contract proposed by runner. */
 message ContractProposal {
   // @inject_tag: validate:"required"
-  io.naftis.entity.ContractSpecification contract = 1;
+  io.naftis.entity.ContractProposal proposal = 1;
 
   // @inject_tag: validate:"required"
-  string signature = 2;
+  string workloadSpecificationMarketId = 2;
 }

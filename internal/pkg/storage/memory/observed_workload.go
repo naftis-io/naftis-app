@@ -1,21 +1,29 @@
 package memory
 
 import (
+	"gitlab.com/naftis/app/naftis/internal/pkg/state"
 	"gitlab.com/naftis/app/naftis/internal/pkg/storage"
 	"gitlab.com/naftis/app/naftis/pkg/protocol/entity"
+	"sync"
+	"time"
 )
 
 type ObservedWorkload struct {
-	data map[string]*entity.ObservedWorkload
+	data  map[string]*entity.ObservedWorkload
+	mutex *sync.Mutex
 }
 
 func NewObservedWorkload() *ObservedWorkload {
 	return &ObservedWorkload{
-		data: make(map[string]*entity.ObservedWorkload, 0),
+		data:  make(map[string]*entity.ObservedWorkload, 0),
+		mutex: &sync.Mutex{},
 	}
 }
 
 func (o *ObservedWorkload) Create(entity entity.ObservedWorkload) error {
+	defer o.mutex.Unlock()
+	o.mutex.Lock()
+
 	if _, exists := o.data[entity.Id]; exists {
 		return storage.ErrObservedWorkloadIdAlreadyUsed
 	}
@@ -26,6 +34,9 @@ func (o *ObservedWorkload) Create(entity entity.ObservedWorkload) error {
 }
 
 func (o *ObservedWorkload) Get(id string) (*entity.ObservedWorkload, error) {
+	defer o.mutex.Unlock()
+	o.mutex.Lock()
+
 	if entity, exists := o.data[id]; !exists {
 		return nil, storage.ErrObservedWorkloadNotFound
 	} else {
@@ -34,9 +45,12 @@ func (o *ObservedWorkload) Get(id string) (*entity.ObservedWorkload, error) {
 	}
 }
 
-func (o *ObservedWorkload) GetByTxId(txId string) (*entity.ObservedWorkload, error) {
+func (o *ObservedWorkload) GetByWorkloadSpecificationMarketId(marketId string) (*entity.ObservedWorkload, error) {
+	defer o.mutex.Unlock()
+	o.mutex.Lock()
+
 	for _, entity := range o.data {
-		if entity.TxId != txId {
+		if entity.WorkloadSpecificationMarketId != marketId {
 			continue
 		}
 		entityCopy := *entity
@@ -47,6 +61,9 @@ func (o *ObservedWorkload) GetByTxId(txId string) (*entity.ObservedWorkload, err
 }
 
 func (o *ObservedWorkload) List() ([]entity.ObservedWorkload, error) {
+	defer o.mutex.Unlock()
+	o.mutex.Lock()
+
 	l := make([]entity.ObservedWorkload, 0)
 
 	for _, entity := range o.data {
@@ -57,11 +74,77 @@ func (o *ObservedWorkload) List() ([]entity.ObservedWorkload, error) {
 	return l, nil
 }
 
-func (o *ObservedWorkload) UpdateState(id string, state string) error {
+func (o *ObservedWorkload) SetState(id string, state string) error {
+	defer o.mutex.Unlock()
+	o.mutex.Lock()
+
 	if entity, exists := o.data[id]; !exists {
 		return storage.ErrObservedWorkloadNotFound
 	} else {
-		entity.State = state
+		entity.State.Previous = entity.State.Current
+		entity.State.Current = state
 		return nil
 	}
+}
+
+func (o *ObservedWorkload) ListId() (state.EntityList, error) {
+	defer o.mutex.Unlock()
+	o.mutex.Lock()
+
+	list := []string{}
+
+	for id, _ := range o.data {
+		list = append(list, id)
+	}
+
+	return list, nil
+}
+
+func (o *ObservedWorkload) GetState(id string) (string, error) {
+	defer o.mutex.Unlock()
+	o.mutex.Lock()
+
+	if entity, exists := o.data[id]; !exists {
+		return "", storage.ErrObservedWorkloadNotFound
+	} else {
+		return entity.State.Current, nil
+	}
+}
+
+func (o *ObservedWorkload) SetBackOff(id string, duration time.Duration) error {
+	defer o.mutex.Unlock()
+	o.mutex.Lock()
+
+	if entity, exists := o.data[id]; !exists {
+		return storage.ErrObservedWorkloadNotFound
+	} else {
+		entity.State.BackOffTimestamp = time.Now().Add(duration).Unix()
+	}
+
+	return nil
+}
+
+func (o *ObservedWorkload) GetBackOff(id string) (time.Time, error) {
+	defer o.mutex.Unlock()
+	o.mutex.Lock()
+
+	if entity, exists := o.data[id]; !exists {
+		return time.Unix(0, 0), storage.ErrObservedWorkloadNotFound
+	} else {
+		return time.Unix(entity.State.BackOffTimestamp, 0), nil
+	}
+}
+
+func (o *ObservedWorkload) SetPrincipalAcceptance(id string, acceptance entity.ObservedWorkload_PrincipalAcceptance) error {
+	defer o.mutex.Unlock()
+	o.mutex.Lock()
+
+	_, exists := o.data[id]
+	if !exists {
+		return storage.ErrObservedWorkloadNotFound
+	}
+
+	o.data[id].PrincipalAcceptance = &acceptance
+
+	return nil
 }

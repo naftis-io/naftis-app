@@ -5,6 +5,9 @@ option go_package = "gitlab.com/naftis/app/naftis/pkg/protocol/entity";
 package io.naftis.entity;
 
 import "api/protoc/entity/workload_spec_message.proto";
+import "api/protoc/entity/contract_proposal_message.proto";
+import "api/protoc/entity/contract_accept_message.proto";
+import "api/protoc/entity/state_message.proto";
 
 /* ObservedWorkload is entity with interesting workload specification, from Runner point of view. Listener watches
  * market, and if workload matching our capabilities was emitted, the ObserverWorkload is persisted and watched
@@ -13,15 +16,24 @@ message ObservedWorkload {
   // @inject_tag: validate:"required,uuid"
   string id = 1;
 
-  string state = 2;
+  io.naftis.entity.State state = 2;
 
   // @inject_tag: validate:"required"
-  string txId = 3;
+  string workloadSpecificationMarketId = 3;
 
   // @inject_tag: validate:"required"
   io.naftis.entity.WorkloadSpec spec = 4;
 
+  // @inject_tag: validate:"required"
+  io.naftis.entity.ContractProposal principalProposal = 5;
 
+  message PrincipalAcceptance {
+    // @inject_tag: validate:"required"
+    string contractAcceptMarketId = 1;
 
+    // @inject_tag: validate:"required"
+    io.naftis.entity.ContractAccept accept = 2;
+  }
 
+  PrincipalAcceptance principalAcceptance = 6;
 }
